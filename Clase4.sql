@@ -41,4 +41,22 @@ AND f.special_features LIKE '%Behind the Scenes%';
 -- 5
 
 SELECT actor.first_name, actor.last_name
-FROM actor
+FROM actor, film, film_actor
+WHERE actor.actor_id = film_actor.actor_id
+AND film.film_id = film_actor.film_id
+AND film.title LIKE '%ZOOLANDER FICTION%';
+
+-- 6
+
+SELECT address.address, city.city, country.country
+FROM address, city, country, store
+WHERE store_id = 1
+AND store.address_id = address.address_id
+AND address.city_id = city.city_id
+AND city.country_id = country.country_id;
+
+-- 7
+
+SELECT film.title, film.rating
+FROM film
+WHERE film.rating = film.rating

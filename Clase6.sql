@@ -15,31 +15,51 @@ FROM actor a
 WHERE a.actor_id NOT IN (SELECT fa.actor_id
 						FROM film_actor fa);
 				
--- 3  revisar
+-- 3
 
-SELECT first_name, last_name
-FROM customer c1
+SELECT r1.rental_id, c.customer_id, c.first_name, c.last_name
+FROM rental r1, customer c
 WHERE NOT EXISTS (SELECT *
-					FROM rental r1,customer c2
-					WHERE r1.customer_id = c2.customer_id
-					AND c1.customer_id <> c2.customer_id);
+					FROM rental r2
+					WHERE r1.customer_id = r2.customer_id
+					AND r1.rental_id <> r2.rental_id)
+AND r1.customer_id = c.customer_id;
 					
--- 4 revisar
-					
-SELECT first_name, last_name
-FROM customer c1
-WHERE EXISTS (SELECT *
-					FROM rental r1,customer c2
-					WHERE r1.customer_id = c2.customer_id
-					AND c1.customer_id <> c2.customer_id);
+-- 4
+
+SELECT DISTINCT r1.rental_id, c.customer_id, c.first_name, c.last_name
+FROM rental r1, customer c
+WHERE EXISTS (SELECT DISTINCT *
+					FROM rental r2
+					WHERE r1.customer_id = r2.customer_id
+					AND r1.rental_id <> r2.rental_id)
+AND r1.customer_id = c.customer_id;
+
 					
 -- 5
 
-SELECT first_name, last_name
+SELECT actor.first_name, actor.last_name
 FROM actor
 WHERE actor.actor_id IN (SELECT *
-						FROM actor,film_actor fa1, film f1
-						WHERE actor.actor_id = fa1.actor_id
-						AND fa1.actor_id = f1.film_id
-						AND (f1.title = 'BETRAYED REAR' OR f1.title = 'CATCH AMISTAD'));
+						FROM actor,film_actor, film 
+						WHERE actor.actor_id = film_actor.actor_id
+						AND film_actor.actor_id = film.film_id
+						AND title IN ('BETRAYED REAR' , 'CATCH AMISTAD'));
+						
+-- 6
+
+SELECT actor.actor_id, actor.first_name, actor.last_name
+FROM actor
+WHERE actor_id IN (SELECT actor.actor_id
+					FROM film_actor, actor, film
+					WHERE actor.actor_id = film_actor.actor_id
+					AND film.film_id = film_actor.film_id
+					AND title = 'BETRAYED REAR')
+AND actor_id NOT IN (SELECT actor.actor_id
+					FROM film_actor, actor, film
+					WHERE actor.actor_id = film_actor.actor_id
+					AND film.film_id = film_actor.film_id
+					AND title = 'CATCH AMISTAD');
+					
+
 						

@@ -23,3 +23,12 @@ INNER JOIN film_actor USING(film_id)
 INNER JOIN actor USING(actor_id)
 WHERE first_name = LTRIM(UPPER('nick'));
 AND last_name = LTRIM(UPPER('WAHLBeRG'));
+
+-- 4
+SELECT film.title, customer.first_name, rental.return_date, IF(rental.return_date < CURDATE(),'Yes','No')
+FROM film
+INNER JOIN inventory USING(film_id)
+INNER JOIN rental USING(inventory_id)
+INNER JOIN customer USING(customer_id)
+WHERE EXTRACT(month FROM rental.rental_date) BETWEEN 5 AND 6;
+

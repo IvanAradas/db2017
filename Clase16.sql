@@ -69,4 +69,30 @@ UPDATE employees set employeeNumber = employeeNumber + 20
 
 -- Intenta actualizar la tabla employees, y al querer restarle 20 al employeeNumber, tira error porque el elmployeedNumber esta dublicado.
 
+-- 3 
+
+ALTER TABLE employees ADD AGE INT;
+ALTER TABLE employees
+	ADD CONSTRAINT myCheckConstraint CHECK(AGE >= 18 AND AGE <=70);
+
+-- 5 
+-- Create a new column called lastUpdate to table employee and use trigger(s) to keep the date-time updated on inserts and updates operations. 
+-- Bonus: add a column lastUpdateUser and the respective trigger(s) to specify who was the last MySQL user that changed the row 
+-- (assume multiple users, other than root, can connect to MySQL and change this table).
+
+ALTER TABLE employees ADD lastUpdate DATETIME DEFAULT NULL;
+
+DELIMITER $$
+CREATE TRIGGER employee_lastUpdate 
+    BEFORE UPDATE ON employees
+    FOR EACH ROW 
+BEGIN
+    INSERT INTO employees_audit
+    SET action = 'update',
+     employeeNumber = OLD.employeeNumber,
+        lastUpdate = NOW(); 
+END$$
+DELIMITER ;
+
+	
 

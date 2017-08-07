@@ -78,10 +78,37 @@ order by
     
 -- 4
 
+-- actor id, first name, last name and the amount of films he/she acted on.
+
+CREATE VIEW actor_information AS
+SELECT actor_id, actor.first_name, actor.last_name, SUM(payment.amount) as total
+FROM actor
+INNER JOIN film_actor USING(actor_id)
+INNER JOIN film USING(film_id)
+INNER JOIN inventory USING(film_id)
+INNER JOIN rental USING(inventory_id)
+INNER JOIN payment USING(rental_id)
+GROUP BY 1,2,3;
+
+SELECT * FROM actor_information;
     
 -- 5
 
+-- Te muestra cada actor, el genereo y las peliculas que actuo en cada genero
 
+SELECT * FROM actor_info;
+
+-- 6
+-- A materialized view is a replica of a target master from a single point in time. 
+-- The master can be either a master table at a master site or a master materialized view at a materialized view site. 
+-- Whereas in multimaster replication tables are continuously updated by other master sites, materialized views are updated from one or more masters through individual batch updates,
+-- known as a refreshes, from a single master site or master materialized view site
+
+-- Why Use Materialized Views?
+--   + Ease Network Loads
+--   + Create a Mass Deployment Environment
+--   + Enable Data Subsetting
+--   + Enable Disconnected Computing
 
 
 
